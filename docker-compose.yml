@@ -1,0 +1,30 @@
+version: "3.3"
+
+services:
+  builder:
+    image: recuses-builder:builder
+    build:
+      context: . # Use an image built from the specified dockerfile in the current directory.
+      dockerfile: dockerfile
+      args:
+        - HEADER_FILE=header_production.go
+        - ENV_FILE=.env.dev
+    networks:
+      - api-net
+    
+  api:
+    image: o-vote-backend:backend
+    build:
+      context: . # Use an image built from the specified dockerfile in the current directory.
+      dockerfile: dockerfile
+      args:
+        - HEADER_FILE=header_production.go
+        - ENV_FILE=.env.dev
+    ports:
+      - "8080:8080"
+    networks:
+      - api-net
+
+networks:
+  api-net:
+    driver: bridge
